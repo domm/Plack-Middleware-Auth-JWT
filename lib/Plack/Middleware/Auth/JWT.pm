@@ -9,31 +9,33 @@ use strict;
 use warnings;
 use parent qw(Plack::Middleware);
 use Plack::Util;
-use Plack::Util::Accessor qw(token_type decode_args decode_callback psgix_claims psgix_token token_required );
-use HTTP::Headers;
-use Log::Any qw($log);
+use Plack::Util::Accessor
+    qw(token_type decode_args decode_callback psgix_claims psgix_token token_required );
+use Plack::Request;
 
 sub prepare_app {
     my $self = shift;
 
     # some defaults
     $self->psgix_claims('claims') unless $self->psgix_claims;
-    $self->psgix_token('token') unless $self->psgix_token;
-    $self->token_type('bearer') unless $self->token_type;
-    $self->token_required(0) unless defined $self->token_required;
+    $self->psgix_token('token')   unless $self->psgix_token;
+    $self->token_type('bearer')   unless $self->token_type;
+    $self->token_required(0)      unless defined $self->token_required;
 
     # either decode_args or decode_callback is required
-    if (my $cb = $self->decode_callback) {
-        die "decode_callback must be a code reference" unless ref($cb) eq 'CODE';
+    if ( my $cb = $self->decode_callback ) {
+        die "decode_callback must be a code reference"
+            unless ref($cb) eq 'CODE';
     }
-    elsif (my $args = $self->decode_args) {
+    elsif ( my $args = $self->decode_args ) {
         $args->{decode_payload} = 1;
-        $args->{decode_header} = 0;
-        $args->{verify_exp} = 1 unless exists $args->{verify_exp};
-        $args->{leeway} = 5 unless exists $args->{leeway};
+        $args->{decode_header}  = 0;
+        $args->{verify_exp}     = 1 unless exists $args->{verify_exp};
+        $args->{leeway}         = 5 unless exists $args->{leeway};
     }
     else {
-        die "Either decode_callback or decode_args has to be defined when loading this Middleware";
+        die
+            "Either decode_callback or decode_args has to be defined when loading this Middleware";
     }
 }
 
@@ -53,22 +55,24 @@ sub call {
 
     unless ($token) {
         return $self->unauthorized if $self->token_required;
+
         # no token found, but non required, so just call the app
         return $self->app->($env);
     }
 
-    my $claims = eval { ... }; #decode token via callback or args
+    my $claims = eval {...};    # TODO decode token via callback or args
     if ($@) {
-        # hm, if token cannot be decoded: 401 or 400?
-        return $self->unauthorized('Cannot decode JWT: '.$@);
+        # TODO hm, if token cannot be decoded: 401 or 400?
+        return $self->unauthorized( 'Cannot decode JWT: ' . $@ );
     }
     else {
-        $env->{'psgix.'.$self->psgix_token} = $token;
-        $env->{'psgix.'.$self->psgix_claims} = $claims;
+        $env->{ 'psgix.' . $self->psgix_token }  = $token;
+        $env->{ 'psgix.' . $self->psgix_claims } = $claims;
         return $self->app->($env);
     }
 
-    return $self->unauthorized; # should never be reached, but just to make sure...
+    # should never be reached, but just to make sure...
+    return $self->unauthorized;
 }
 
 sub unauthorized {
