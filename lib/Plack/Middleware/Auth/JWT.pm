@@ -69,7 +69,7 @@ sub call {
 
     my $claims = eval {
         if ( my $cb = $self->decode_callback ) {
-            $cb->( $token, $env );
+            return $cb->( $token, $env );
         }
         else {
             return decode_jwt( token => $token, %{ $self->decode_args } );
@@ -106,14 +106,32 @@ sub unauthorized {
 
 =head1 SYNOPSIS
 
+  # use Crypt::JWT to decode the JWT
   use Plack::Builder;
   builder {
-      enable "Plack::Middleware::Auth::JWT"
-        TODO config
+      enable "Plack::Middleware::Auth::JWT",
+          decode_args => { key => '12345' },
       ;
       $app;
   };
 
+  # or provide your own decoder in a callback
+  use Plack::Builder;
+  builder {
+      enable "Plack::Middleware::Auth::JWT",
+          decode_callback => sub {
+              my $token = shift;
+              ....
+          },
+      ;
+      $app;
+  };
+
+
+  # curl -H 'Authorization: Bearer eyJhbG...'
+  # if the JWT is valid, two keys will be added to $env->{psgix}
+  # $env->{'psgix.token'}  = 'original_token'
+  # $env->{'psgix.claims'} = { sub => 'bart' } # claims as hashref
 
 =head1 DESCRIPTION
 
@@ -125,11 +143,59 @@ the JWT via the header is the prefered method).
 
 =head2 Configuration
 
-TODO: via callback, or via attribs
+TODO
+
+=head3 decode_args
+
+See C<<Crypt::JWT decode_jwt>>
+
+Please note that C<key> might has to be passed as a string-ref or an object, see C<Crypt::JWT>
+
+It is B<very much recommended> that you only allow the algorithms you are actually using by setting C<accepted_alg>! Per default, 'none' is B<not> allowed.
+
+Hardcoded:
+
+        decode_payload = 1
+        decode_header  = 0
+
+Different defaults:
+
+        verify_exp = 1
+        leeway     = 5
+
+You either have to use C<decode_args>, or provide a C<decode_callback>.
+
+=head3 decode_callback
+
+Callback to decode the token. Gets the token as a string and the psgi-env, has to return a hashref with claims.
+
+You have to either provide a callback, or use C<decode_args>.
+
+=head3 psgix_claims
+
+Name of the entry in C<psgix> were the claims are stored, default 'claims', so you can get the (for example) C<sub> claim via
+
+  $env->{'psgix.claims'}->{sub}
+
+=head3 psgix_token
+
+Name of the entry in C<psgix> were the raw token is stored, default 'token'.
+
+=head3 token_required
+
+If set to a true value, all requests need to include a valid JWT. Default false, so you have to check in your application code if a token was submitted.
+
+=head3 token_header_name
+
+Name of the token in the HTTP C<Authorization> header, default 'Bearer'. If you set it to C<0>, headers will be ignored.
+
+=head3 token_query_name
+
+Name of the HTTP query param that contains the token, default 'token'. If you set it to C<0>, tokens in the query will be ignored.
 
 =head2 Example
 
-TODO
+TODO, in the meantime you can take a look at the tests.
 
 =head1 SEE ALSO
 
