@@ -6,9 +6,6 @@ use HTTP::Request::Common;
 use Plack::Test;
 use Plack::Builder;
 
-# The fake app we use for testing
-package main;
-
 sub decode_callback {
     my ( $token, $env ) = @_;
     return { sub => 'fake' } if $token eq 'not-a-JWT';

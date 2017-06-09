@@ -12,6 +12,7 @@ use Plack::Util;
 use Plack::Util::Accessor
     qw(decode_args decode_callback psgix_claims psgix_token token_required token_header_name token_query_name);
 use Plack::Request;
+use Crypt::JWT qw(decode_jwt);
 
 sub prepare_app {
     my $self = shift;
@@ -70,9 +71,11 @@ sub call {
         if ( my $cb = $self->decode_callback ) {
             $cb->( $token, $env );
         }
-    };    # TODO decode token via callback or args
+        else {
+            return decode_jwt( token => $token, %{ $self->decode_args } );
+        }
+    };
     if ($@) {
-
         # TODO hm, if token cannot be decoded: 401 or 400?
         return $self->unauthorized( 'Cannot decode JWT: ' . $@ );
     }
