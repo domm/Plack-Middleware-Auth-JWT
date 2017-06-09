@@ -66,8 +66,13 @@ sub call {
         return $self->app->($env);
     }
 
-    my $claims = eval {...};    # TODO decode token via callback or args
+    my $claims = eval {
+        if ( my $cb = $self->decode_callback ) {
+            $cb->( $token, $env );
+        }
+    };    # TODO decode token via callback or args
     if ($@) {
+
         # TODO hm, if token cannot be decoded: 401 or 400?
         return $self->unauthorized( 'Cannot decode JWT: ' . $@ );
     }
