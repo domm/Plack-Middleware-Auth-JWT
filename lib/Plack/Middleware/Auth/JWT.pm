@@ -10,7 +10,7 @@ use warnings;
 use parent qw(Plack::Middleware);
 use Plack::Util;
 use Plack::Util::Accessor
-    qw(token_type decode_args decode_callback psgix_claims psgix_token token_required );
+    qw(decode_args decode_callback psgix_claims psgix_token token_required token_header_name token_query_name);
 use Plack::Request;
 
 sub prepare_app {
@@ -19,8 +19,13 @@ sub prepare_app {
     # some defaults
     $self->psgix_claims('claims') unless $self->psgix_claims;
     $self->psgix_token('token')   unless $self->psgix_token;
-    $self->token_type('bearer')   unless $self->token_type;
-    $self->token_required(0)      unless defined $self->token_required;
+
+    $self->token_header_name('bearer')
+        unless defined $self->token_header_name;
+    $self->token_header_name(undef)  unless $self->token_header_name;
+    $self->token_query_name('token') unless defined $self->token_query_name;
+    $self->token_query_name(undef)   unless $self->token_query_name;
+    $self->token_required(0)         unless defined $self->token_required;
 
     # either decode_args or decode_callback is required
     if ( my $cb = $self->decode_callback ) {
@@ -44,13 +49,14 @@ sub call {
 
     my $token;
 
-    if ( my $auth = $env->{HTTP_AUTHORIZATION} ) {
-        my $token_type = $self->token_type;
-        $token = $1 if $auth =~ /^\s*$token_type\s+(.+)/i;
+    if ( $self->token_header_name && $env->{HTTP_AUTHORIZATION} ) {
+        my $name = $self->token_header_name;
+        my $auth = $env->{HTTP_AUTHORIZATION};
+        $token = $1 if $auth =~ /^\s*$name\s+(.+)/i;
     }
-    else {
+    elsif ( my $name = $self->token_query_name ) {
         my $req = Plack::Request->new($env);
-        $token = $req->query_parameters->get('access_token');
+        $token = $req->query_parameters->get($name);
     }
 
     unless ($token) {
