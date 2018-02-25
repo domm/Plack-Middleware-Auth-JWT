@@ -1,5 +1,10 @@
 Revision history for Plack::Middleware::Auth::JWT
 
+0.902	2018-02-25T20:48:59
+    - adapt test for malformed tokens, as Crypt::JWT-0.20 returns a
+      different error (spotted by Slaven Rezic via CPAN testers)
+
+
 0.901   2017-06-13T11:02:23
     - add ignore_invalid_token option
 

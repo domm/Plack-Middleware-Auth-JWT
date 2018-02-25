@@ -2,7 +2,7 @@ package Plack::Middleware::Auth::JWT;
 
 # ABSTRACT: Token-based Auth (aka Bearer Token) using JSON Web Tokens (JWT)
 
-our $VERSION = '0.901';
+our $VERSION = '0.902';
 
 use 5.010;
 use strict;
