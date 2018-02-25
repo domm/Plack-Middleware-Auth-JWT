@@ -4,7 +4,7 @@ Plack::Middleware::Auth::JWT - Token-based Auth (aka Bearer Token) using JSON We
 
 # VERSION
 
-version 0.901
+version 0.903
 
 # SYNOPSIS
 
