@@ -12,7 +12,7 @@ use Plack::Util;
 use Plack::Util::Accessor
     qw(decode_args decode_callback psgix_claims psgix_token token_required ignore_invalid_token token_header_name token_query_name);
 use Plack::Request;
-use Crypt::JWT qw(decode_jwt);
+use Crypt::JWT 0.020 qw(decode_jwt);
 
 sub prepare_app {
     my $self = shift;
