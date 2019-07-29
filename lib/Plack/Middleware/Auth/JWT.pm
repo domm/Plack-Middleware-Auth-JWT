@@ -2,7 +2,7 @@ package Plack::Middleware::Auth::JWT;
 
 # ABSTRACT: Token-based Auth (aka Bearer Token) using JSON Web Tokens (JWT)
 
-our $VERSION = '0.903';
+our $VERSION = '0.904';
 
 use 5.010;
 use strict;
@@ -246,6 +246,10 @@ Thanks to
 =item *
 
 L<validad.com|https://www.validad.com/> for supporting Open Source.
+
+=item * L<jwright|https://github.com/jwrightecs> for fixing a
+regression in the tests caused by an update in L<Crypt::JWT> error
+messages. The same issue was also reported by SREZIC.
 
 =back
 

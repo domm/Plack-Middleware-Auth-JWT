@@ -4,7 +4,7 @@ Plack::Middleware::Auth::JWT - Token-based Auth (aka Bearer Token) using JSON We
 
 # VERSION
 
-version 0.903
+version 0.904
 
 # SYNOPSIS
 
@@ -132,6 +132,9 @@ TODO, in the meantime you can take a look at the tests.
 Thanks to
 
 - [validad.com](https://www.validad.com/) for supporting Open Source.
+- [jwright](https://github.com/jwrightecs) for fixing a
+regression in the tests caused by an update in [Crypt::JWT](https://metacpan.org/pod/Crypt::JWT) error
+messages. The same issue was also reported by SREZIC.
 
 # AUTHOR
 
@@ -139,7 +142,7 @@ Thomas Klausner <domm@cpan.org>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2017 by Thomas Klausner.
+This software is copyright (c) 2017 - 2019 by Thomas Klausner.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
