@@ -4,7 +4,7 @@ Plack::Middleware::Auth::JWT - Token-based Auth (aka Bearer Token) using JSON We
 
 # VERSION
 
-version 0.904
+version 0.905
 
 # SYNOPSIS
 
@@ -49,9 +49,9 @@ TODO
 
 ### decode\_args
 
-See ["decode\_jwt" in Crypt::JWT](https://metacpan.org/pod/Crypt::JWT#decode_jwt)
+See ["decode\_jwt" in Crypt::JWT](https://metacpan.org/pod/Crypt%3A%3AJWT#decode_jwt)
 
-Please note that `key` might has to be passed as a string-ref or an object, see [Crypt::JWT](https://metacpan.org/pod/Crypt::JWT)
+Please note that `key` might has to be passed as a string-ref or an object, see [Crypt::JWT](https://metacpan.org/pod/Crypt%3A%3AJWT)
 
 It is **very much recommended** that you only allow the algorithms you are actually using by setting `accepted_alg`! Per default, 'none' is **not** allowed.
 
@@ -133,16 +133,16 @@ Thanks to
 
 - [validad.com](https://www.validad.com/) for supporting Open Source.
 - [jwright](https://github.com/jwrightecs) for fixing a
-regression in the tests caused by an update in [Crypt::JWT](https://metacpan.org/pod/Crypt::JWT) error
+regression in the tests caused by an update in [Crypt::JWT](https://metacpan.org/pod/Crypt%3A%3AJWT) error
 messages. The same issue was also reported by SREZIC.
 
 # AUTHOR
 
-Thomas Klausner <domm@cpan.org>
+Thomas Klausner <domm@plix.at>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2017 - 2019 by Thomas Klausner.
+This software is copyright (c) 2017 - 2021 by Thomas Klausner.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
