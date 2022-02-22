@@ -228,7 +228,7 @@ TODO, in the meantime you can take a look at the tests.
 
 =over
 
-=item * L<Cryp::JWT|https://metacpan.org/pod/Crypt::JWT> - encode / decode JWTs using various algorithms. Very complete!
+=item * L<Crypt::JWT|https://metacpan.org/pod/Crypt::JWT> - encode / decode JWTs using various algorithms. Very complete!
 
 =item * L<Introduction to JSON Web Tokens|https://jwt.io/introduction> - good overview.
 
