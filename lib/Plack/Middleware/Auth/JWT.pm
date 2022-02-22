@@ -250,5 +250,7 @@ L<validad.com|https://www.validad.com/> for supporting Open Source.
 regression in the tests caused by an update in L<Crypt::JWT> error
 messages. The same issue was also reported by SREZIC.
 
+=item * L<Michael R. Davis|https://github.com/mrdvt92> for fixing a typo.
+
 =back
 
