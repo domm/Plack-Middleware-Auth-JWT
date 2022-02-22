@@ -1,6 +1,8 @@
 Revision history for Plack::Middleware::Auth::JWT
 
 {{$NEXT}}
+
+0.906     2022-02-22 09:51:35+01:00
      - Fixed type-o in see also doc (Michael R. Davis)
 
 
